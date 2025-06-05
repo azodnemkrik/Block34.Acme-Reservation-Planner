@@ -2,39 +2,45 @@ const express = require('express')
 const app = express.Router()
 const {
 	fetchCustomers,
+	fetchRestaurants,
 	createReservation,
 } = require('./db.js')
 
 // CREATE
-	// Customer
-	// Restaurant
-	// Reservation
-app.post('/reservations' , async (req,res,next) => {
+// Customer
+// Restaurant
+// Reservation
+app.post('/reservations', async (req, res, next) => {
 	try {
-		res.send(await createReservation())
+		res.send(await createReservation(req.body))
 	} catch (error) {
 		next(error)
 	}
 })
 
 // READ
-	// Customer
-	app.get('/customers' , async (req,res,next) => {
+// Customer
+app.get('/customers' , async (req,res,next) => {
+    try {
+        res.send(await fetchCustomers())
+    } catch (error) {
+        next(error)
+    }
+})
+
+// Restaurant
+app.get('/restaurants', async (req, res, next) => {
 	try {
-		res.send(await fetchCustomers())
+		res.send(await fetchRestaurants())
 	} catch (error) {
 		next(error)
 	}
 })
-	// Restaurant
-	// Reservation
-app.get()
+// Reservation
 
 // UPDATE
-app.put()
 
 // DELETE
-app.delete()
-	// Reservation
+// Reservation
 
-// module.exports = app
+module.exports = app

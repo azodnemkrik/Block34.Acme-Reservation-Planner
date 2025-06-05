@@ -4,8 +4,27 @@ const { v4 } = require('uuid')
 const uuidv4 = v4
 
 // CREATE
-const createCustomer = () => {}
-const createRestaurant = () => {}
+const createCustomer = async (customer) => {
+	const SQL = `
+		INSERT INTO customers
+		(id , name)
+		VALUES
+		($1 , $2)
+		RETURNING *
+	`
+	const response = await client.query(SQL , [uuidv4() , customer.name])
+}
+const createRestaurant = async (restaurant) => {
+	const SQL = `
+		INSERT INTO restaurants
+		(id , name)
+		VALUES
+		($1 , $2)
+		RETURNING *
+	`
+	const response = await client.query(SQL , [uuidv4() , restaurant.name])
+}
+
 const createReservation = () => {}
 
 // READ
@@ -42,6 +61,15 @@ const seed = async () => {
 		);
 	`
 	await client.query(SQL)
+
+	const [alan, ander, brooklyn, emerald, leroy] = await Promise.all([
+		createCustomer({name: "Alan"}),
+		createCustomer({name: "Ander"}),
+		createCustomer({name: "Brooklyn"}),
+		createCustomer({name: "Emerald"}),
+		createCustomer({name: "Leroy"}),
+	])
+
 }
 
 module.exports = {

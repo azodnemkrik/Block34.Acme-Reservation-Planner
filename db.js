@@ -13,7 +13,9 @@ const createCustomer = async (customer) => {
 		RETURNING *
 	`
 	const response = await client.query(SQL , [uuidv4() , customer.name])
+	return response.rows[0]
 }
+
 const createRestaurant = async (restaurant) => {
 	const SQL = `
 		INSERT INTO restaurants
@@ -23,12 +25,30 @@ const createRestaurant = async (restaurant) => {
 		RETURNING *
 	`
 	const response = await client.query(SQL , [uuidv4() , restaurant.name])
+	return response.rows[0]
 }
 
-const createReservation = () => {}
+const createReservation = async (reservation) => {
+	const SQL = `
+		INSERT INTO reservations
+		(id, date, party_count , restaurant_id , customer_id)
+		VALUES
+		($1 ,now(), $2 , $3 , $4 )
+		RETURNING *
+	`
+	const response = await client.query(SQL, [uuidv4(), reservation.party_count , reservation.restaurant_id , reservation.customer_id])
+	return response.rows[0]
+}
 
 // READ
-const fetchCustomers = () => {}
+const fetchCustomers = async () => {
+	const SQL = `
+		SELECT *
+		FROM customers
+	`
+	const response = await client.query(SQL)
+	return response.rows
+}
 const fetchRestaurants = () => {}
 
 // UPDATE
@@ -55,19 +75,37 @@ const seed = async () => {
 		CREATE TABLE reservations(
 			id UUID PRIMARY KEY,
 			date TIMESTAMP DEFAULT now(),
-			party_count INTEGER DEFAULT 1,
+			party_count INTEGER DEFAULT 1 NOT NULL,
 			restaurant_id UUID REFERENCES restaurants(id) NOT NULL,
-			customer_id UUID REFERENCES customers(id)
+			customer_id UUID REFERENCES customers(id) NOT NULL
 		);
 	`
 	await client.query(SQL)
 
-	const [alan, ander, brooklyn, emerald, leroy] = await Promise.all([
+	const [alan, ander, brooklyn, emerald, leroy, aviana, brian, kasen, ford, clarke] = await Promise.all([
 		createCustomer({name: "Alan"}),
 		createCustomer({name: "Ander"}),
 		createCustomer({name: "Brooklyn"}),
 		createCustomer({name: "Emerald"}),
 		createCustomer({name: "Leroy"}),
+		createCustomer({name: "Aviana"}),
+		createCustomer({name: "Brian"}),
+		createCustomer({name: "Kasen"}),
+		createCustomer({name: "Ford"}),
+		createCustomer({name: "Clarke"}),
+	])
+
+	const [jadeFarmer, orangeChicken, hotHeart, ambiance, laSalutation] = await Promise.all([
+		createRestaurant({name: "Jade Farmer"}),
+		createRestaurant({name: "The Orange Chicken"}),
+		createRestaurant({name: "Hot Heart"}),
+		createRestaurant({name: "Ambiance"}),
+		createRestaurant({name: "la Salutation"}),
+	])
+
+
+	await Promise.all([
+		 createReservation({party_count: 3 , restaurant_id: jadeFarmer.id , customer_id:ford.id})
 	])
 
 }
@@ -75,4 +113,6 @@ const seed = async () => {
 module.exports = {
 	seed,
 	client,
+	fetchCustomers,
+	createReservation
 }

@@ -25,7 +25,7 @@ const createRestaurant = async (restaurant) => {
 		RETURNING *
 	`
 	const response = await client.query(SQL , [uuidv4() , restaurant.name])
-	console.log("response.rows:", response.rows[0])
+	// console.log("response.rows:", response.rows[0])
 	return response.rows[0]
 }
 

@@ -25,7 +25,6 @@ app.get('/customers' , async (req,res,next) => {
 // Restaurant
 app.post('/restaurants', async (req, res, next) => {
 	try {
-		console.log("req.body:", req.body)
 		res.send(await createRestaurant(req.body))
 	} catch (error) {
 		next(error)
@@ -35,7 +34,8 @@ app.post('/restaurants', async (req, res, next) => {
 // Reservation
 app.post('/customers/:id/reservations', async (req, res, next) => {
 	try {
-		res.send(await createReservation(req.body.party_count , req.body.restaurant_id , req.params.id ))
+		console.log("req.params.id:", req.params.id)
+		res.send(await createReservation(req.body))	
 	} catch (error) {
 		next(error)
 	}

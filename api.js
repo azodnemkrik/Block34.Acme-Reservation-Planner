@@ -5,20 +5,9 @@ const {
 	fetchRestaurants,
 	fetchReservations,
 	createReservation,
+	createRestaurant
 } = require('./db.js')
-
-// CREATE
-// Customer
-// Restaurant
-// Reservation
-app.post('/customers/:id/reservations', async (req, res, next) => {
-	try {
-		res.send(await createReservation(req.body.party_count , req.body.restaurant_id , req.params.id ))
-	} catch (error) {
-		next(error)
-	}
-})
-
+app.use(express.json())
 
 // READ
 // Customer
@@ -29,6 +18,31 @@ app.get('/customers' , async (req,res,next) => {
         next(error)
     }
 })
+
+
+// CREATE
+// Customer
+// Restaurant
+app.post('/restaurants', async (req, res, next) => {
+	try {
+		console.log("req.body:", req.body)
+		res.send(await createRestaurant(req.body))
+	} catch (error) {
+		next(error)
+	}
+})
+
+// Reservation
+app.post('/customers/:id/reservations', async (req, res, next) => {
+	try {
+		res.send(await createReservation(req.body.party_count , req.body.restaurant_id , req.params.id ))
+	} catch (error) {
+		next(error)
+	}
+})
+
+
+
 
 // Restaurant
 app.get('/restaurants', async (req, res, next) => {

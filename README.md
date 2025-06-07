@@ -1,5 +1,5 @@
 Main issues to remember:
-"req.body" is already an object
+"req.body" is already an object, no need to try and parse it further.
 ![image](https://github.com/user-attachments/assets/a68ba0ca-ef29-4ba9-a6e4-50aefe56ab4a)
 
 Postman - Don't forget your damn quotes! You spent HOURS trying figure this out. You shall forever remember.

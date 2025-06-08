@@ -6,9 +6,11 @@ const {
 	fetchReservations,
 	createReservation,
 	createRestaurant,
-	createCustomer
+	createCustomer,
+	destroyReservation
 } = require('./db.js')
 app.use(express.json())
+app.use(require('morgan')('dev'))
 
 // READ
 // Customer
@@ -73,5 +75,15 @@ app.get('/reservations', async (req, res, next) => {
 
 // DELETE
 // Reservation
+app.delete('/customers/:customer_id/reservations/:id', async (req, res, next) => {
+	try {
+		console.log(req.params)
+		await destroyReservation(req.params.customer_id, req.params.id)
+		res.sendStatus(204)	
+	} catch (error) {
+		next(error)
+	}
+})
+
 
 module.exports = app

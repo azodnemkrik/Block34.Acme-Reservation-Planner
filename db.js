@@ -71,7 +71,18 @@ const fetchReservations = async () => {
 // UPDATE
 
 // DELETE
-const destroyReservation = () => {}
+const destroyReservation = async (customer_id, id) => {
+		const SQL = `
+		DELETE FROM reservations
+		WHERE customer_id = $1
+		AND id = $2
+	`
+	await client.query(SQL, [customer_id , id])
+	// NOTHING TO RETURN HERE!!!!
+	// const response = await client.query(SQL, [reservation])
+	// console.log("RESPONSE:", response)
+	// return response.rows
+}
 
 const seed = async () => {
 	const SQL = `
@@ -122,7 +133,9 @@ const seed = async () => {
 
 
 	await Promise.all([
-		 createReservation({party_count: 3 , restaurant_id: jadeFarmer.id , customer_id:ford.id})
+		 createReservation({party_count: 3 , restaurant_id: jadeFarmer.id , customer_id:ford.id}),
+		 createReservation({party_count: 30 , restaurant_id: ambiance.id , customer_id:clarke.id}),
+		 createReservation({party_count: 300 , restaurant_id: laSalutation.id , customer_id:alan.id})
 	])
 
 }
@@ -134,5 +147,7 @@ module.exports = {
 	fetchRestaurants,
 	fetchReservations,
 	createReservation,
-	createRestaurant
+	createRestaurant,
+	createCustomer,
+	destroyReservation
 }

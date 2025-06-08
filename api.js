@@ -5,7 +5,8 @@ const {
 	fetchRestaurants,
 	fetchReservations,
 	createReservation,
-	createRestaurant
+	createRestaurant,
+	createCustomer
 } = require('./db.js')
 app.use(express.json())
 
@@ -22,6 +23,13 @@ app.get('/customers' , async (req,res,next) => {
 
 // CREATE
 // Customer
+app.post('/customers', async (req, res, next) => {
+	try {
+		res.send(await createCustomer(req.body))
+	} catch (error) {
+		next(error)
+	}
+})
 // Restaurant
 app.post('/restaurants', async (req, res, next) => {
 	try {
